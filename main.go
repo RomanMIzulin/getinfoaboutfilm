@@ -121,13 +121,13 @@ func main(){
 	if err := processedTmp.Execute(os.Stdout,res); err != nil{
 		log.Fatal(err)
 	}
-	//"/home/romanmatveevskb161/page.html"
-	w,errr := os.OpenFile("/home/romanmatveevskb161/page.html",os.O_CREATE|os.O_WRONLY, os.ModeDevice)
+	
+	w,errr := os.OpenFile("/way/to/page.html",os.O_CREATE|os.O_WRONLY, os.ModeDevice)
 	if errr != nil {
 		log.Fatal("cant open file")
 	}
-
 	defer w.Close()
+	
 	if err := movieList.Execute(w,res);err != nil{
 		log.Fatal(err)
 	}
