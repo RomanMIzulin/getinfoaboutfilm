@@ -18,6 +18,25 @@ Title: {{.Title}}. Released: {{.Released}}. Runtime h.: {{.Runtime }}. Genre: {{
 const (
 	DataRequest string ="http://www.omdbapi.com/?t="
 )
+var movieList =	template.Must(template.New("movielist").Parse(`
+<h1>{{.TotalNumber}} Movies</h1>
+<table>
+<tr style='text-align: left'>
+	<th>Title</th>
+	<th>Released</th>
+	<th>Runtime</th>
+	<th>Genre</th>
+</tr>
+{{range .Items}}
+<tr>
+	<td><a href='{{.Poster}}'>{{.Title}}</td>
+	<td>{{.Released}}</td>
+	<td>{{.Runtime}}</td>
+	<td>{{.Genre}}</td>
+	<td></td>
+</tr>
+{{end}}
+</table><hr>`))
 
 type ResReqMovie struct {
 	TotalNumber int
@@ -98,8 +117,18 @@ func result() ResReqMovie {
 var processedTmp =template.Must(template.New("films").Funcs(template.FuncMap{}).Parse(templ))
 
 func main(){
+	res:=result()
+	if err := processedTmp.Execute(os.Stdout,res); err != nil{
+		log.Fatal(err)
+	}
+	//"/home/romanmatveevskb161/page.html"
+	w,errr := os.OpenFile("/home/romanmatveevskb161/page.html",os.O_CREATE|os.O_WRONLY, os.ModeDevice)
+	if errr != nil {
+		log.Fatal("cant open file")
+	}
 
-	if err := processedTmp.Execute(os.Stdout,result()); err != nil{
+	defer w.Close()
+	if err := movieList.Execute(w,res);err != nil{
 		log.Fatal(err)
 	}
 
